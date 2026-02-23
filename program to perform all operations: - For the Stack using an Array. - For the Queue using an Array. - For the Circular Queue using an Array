@@ -1,0 +1,176 @@
+#include <stdio.h>
+#define MAX 5
+
+// ---------------- STACK ----------------
+int stack[MAX], top = -1;
+
+void push() {
+    int value;
+    if (top == MAX - 1) {
+        printf("Stack Overflow!\n");
+    } else {
+        printf("Enter value to push: ");
+        scanf("%d", &value);
+        stack[++top] = value;
+        printf("Pushed %d into stack.\n", value);
+    }
+}
+
+void pop() {
+    if (top == -1) {
+        printf("Stack Underflow!\n");
+    } else {
+        printf("Popped element: %d\n", stack[top--]);
+    }
+}
+
+void displayStack() {
+    if (top == -1) {
+        printf("Stack is empty.\n");
+    } else {
+        printf("Stack elements:\n");
+        for (int i = top; i >= 0; i--)
+            printf("%d\n", stack[i]);
+    }
+}
+
+// ---------------- QUEUE ----------------
+int queue[MAX], front = -1, rear = -1;
+
+void enqueue() {
+    int value;
+    if (rear == MAX - 1) {
+        printf("Queue Overflow!\n");
+    } else {
+        printf("Enter value to enqueue: ");
+        scanf("%d", &value);
+        if (front == -1)
+            front = 0;
+        queue[++rear] = value;
+        printf("Enqueued %d into queue.\n", value);
+    }
+}
+
+void dequeue() {
+    if (front == -1 || front > rear) {
+        printf("Queue Underflow!\n");
+    } else {
+        printf("Dequeued element: %d\n", queue[front++]);
+    }
+}
+
+void displayQueue() {
+    if (front == -1 || front > rear) {
+        printf("Queue is empty.\n");
+    } else {
+        printf("Queue elements:\n");
+        for (int i = front; i <= rear; i++)
+            printf("%d ", queue[i]);
+        printf("\n");
+    }
+}
+
+// ------------- CIRCULAR QUEUE -------------
+int cqueue[MAX], cfront = -1, crear = -1;
+
+void cenqueue() {
+    int value;
+    if ((crear + 1) % MAX == cfront) {
+        printf("Circular Queue Overflow!\n");
+    } else {
+        printf("Enter value to enqueue: ");
+        scanf("%d", &value);
+
+        if (cfront == -1)
+            cfront = 0;
+
+        crear = (crear + 1) % MAX;
+        cqueue[crear] = value;
+        printf("Enqueued %d into circular queue.\n", value);
+    }
+}
+
+void cdequeue() {
+    if (cfront == -1) {
+        printf("Circular Queue Underflow!\n");
+    } else {
+        printf("Dequeued element: %d\n", cqueue[cfront]);
+
+        if (cfront == crear) {
+            cfront = crear = -1;
+        } else {
+            cfront = (cfront + 1) % MAX;
+        }
+    }
+}
+
+void displayCQueue() {
+    if (cfront == -1) {
+        printf("Circular Queue is empty.\n");
+    } else {
+        printf("Circular Queue elements:\n");
+        int i = cfront;
+        while (1) {
+            printf("%d ", cqueue[i]);
+            if (i == crear)
+                break;
+            i = (i + 1) % MAX;
+        }
+        printf("\n");
+    }
+}
+
+// ---------------- MAIN MENU ----------------
+int main() {
+    int choice, subchoice;
+
+    do {
+        printf("\n--- MAIN MENU ---\n");
+        printf("1. Stack Operations\n");
+        printf("2. Queue Operations\n");
+        printf("3. Circular Queue Operations\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+
+        case 1:
+            printf("\n--- Stack Menu ---\n");
+            printf("1. Push\n2. Pop\n3. Display\n");
+            scanf("%d", &subchoice);
+            if (subchoice == 1) push();
+            else if (subchoice == 2) pop();
+            else if (subchoice == 3) displayStack();
+            break;
+
+        case 2:
+            printf("\n--- Queue Menu ---\n");
+            printf("1. Enqueue\n2. Dequeue\n3. Display\n");
+            scanf("%d", &subchoice);
+            if (subchoice == 1) enqueue();
+            else if (subchoice == 2) dequeue();
+            else if (subchoice == 3) displayQueue();
+            break;
+
+        case 3:
+            printf("\n--- Circular Queue Menu ---\n");
+            printf("1. Enqueue\n2. Dequeue\n3. Display\n");
+            scanf("%d", &subchoice);
+            if (subchoice == 1) cenqueue();
+            else if (subchoice == 2) cdequeue();
+            else if (subchoice == 3) displayCQueue();
+            break;
+
+        case 4:
+            printf("Exiting program.\n");
+            break;
+
+        default:
+            printf("Invalid choice!\n");
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
