@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+// ----------- INSERTION -----------
+void insertAtEnd(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+
+    if (head == NULL) {
+        head = newNode;
+        newNode->next = head;
+        printf("Inserted %d as the first node.\n", value);
+        return;
+    }
+
+    struct Node* temp = head;
+    while (temp->next != head)
+        temp = temp->next;
+
+    temp->next = newNode;
+    newNode->next = head;
+
+    printf("Inserted %d at the end.\n", value);
+}
+
+// ----------- DELETION -----------
+void deleteAtEnd() {
+    if (head == NULL) {
+        printf("List is empty. Nothing to delete.\n");
+        return;
+    }
+
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+
+    // Only one node
+    if (head->next == head) {
+        printf("Deleted %d from list.\n", head->data);
+        free(head);
+        head = NULL;
+        return;
+    }
+
+    while (temp->next != head) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    prev->next = head;
+    printf("Deleted %d from end.\n", temp->data);
+    free(temp);
+}
+
+// ----------- DISPLAY -----------
+void displayList() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = head;
+    printf("Circular Linked List: ");
+
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != head);
+
+    printf("(head)\n");
+}
+
+// ----------- MAIN MENU -----------
+int main() {
+    int choice, value;
+
+    do {
+        printf("\n--- CIRCULAR LINKED LIST OPERATIONS ---\n");
+        printf("1. Insert at end\n");
+        printf("2. Delete at end\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                insertAtEnd(value);
+                break;
+            case 2:
+                deleteAtEnd();
+                break;
+            case 3:
+                displayList();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                break;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
