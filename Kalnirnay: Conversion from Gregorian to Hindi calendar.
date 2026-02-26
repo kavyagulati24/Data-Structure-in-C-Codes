@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+int main() {
+
+    int day, month, year;
+    int vikramSamvat;
+    char *hindiMonths[] = {
+        "Chaitra", "Vaishakh", "Jyeshtha", "Ashadha",
+        "Shravana", "Bhadrapada", "Ashwin", "Kartik",
+        "Margashirsha", "Pausha", "Magha", "Phalguna"
+    };
+
+    printf("Enter Gregorian Date (DD MM YYYY): ");
+    scanf("%d %d %d", &day, &month, &year);
+
+    
+    if(month < 4) {
+        vikramSamvat = year + 56;
+    } else {
+        vikramSamvat = year + 57;
+    }
+
+   
+    int hindiMonthIndex;
+
+    switch(month) {
+        case 3:
+        case 4: hindiMonthIndex = 0; break;  // Chaitra
+        case 5: hindiMonthIndex = 1; break;  // Vaishakh
+        case 6: hindiMonthIndex = 2; break;  // Jyeshtha
+        case 7: hindiMonthIndex = 3; break;  // Ashadha
+        case 8: hindiMonthIndex = 4; break;  // Shravana
+        case 9: hindiMonthIndex = 5; break;  // Bhadrapada
+        case 10: hindiMonthIndex = 6; break; // Ashwin
+        case 11: hindiMonthIndex = 7; break; // Kartik
+        case 12: hindiMonthIndex = 8; break; // Margashirsha
+        case 1: hindiMonthIndex = 9; break;  // Pausha
+        case 2: hindiMonthIndex = 10; break; // Magha
+        default: hindiMonthIndex = 11; break; // Phalguna
+    }
+
+    printf("\n----- Hindi Calendar Details -----\n");
+    printf("Vikram Samvat Year: %d\n", vikramSamvat);
+    printf("Hindi Month (Approx): %s\n", hindiMonths[hindiMonthIndex]);
+    printf("Day: %d\n", day);
+
+    return 0;
+}
