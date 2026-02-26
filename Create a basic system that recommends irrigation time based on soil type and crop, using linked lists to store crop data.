@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct Crop {
+    char cropName[50];
+    char soilType[50];
+    float irrigationTime;  // in hours
+    struct Crop* next;
+};
+
+
+struct Crop* createNode(char crop[], char soil[], float time) {
+    struct Crop* newNode = (struct Crop*)malloc(sizeof(struct Crop));
+    strcpy(newNode->cropName, crop);
+    strcpy(newNode->soilType, soil);
+    newNode->irrigationTime = time;
+    newNode->next = NULL;
+    return newNode;
+}
+
+
+struct Crop* insert(struct Crop* head, char crop[], char soil[], float time) {
+    struct Crop* newNode = createNode(crop, soil, time);
+
+    if (head == NULL) {
+        return newNode;
+    }
+
+    struct Crop* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    temp->next = newNode;
+    return head;
+}
+
+
+void display(struct Crop* head) {
+    struct Crop* temp = head;
+
+    if (head == NULL) {
+        printf("No crop data available.\n");
+        return;
+    }
+
+    printf("\nAvailable Crop Data:\n");
+    while (temp != NULL) {
+        printf("Crop: %s | Soil: %s | Irrigation Time: %.2f hours\n",
+               temp->cropName, temp->soilType, temp->irrigationTime);
+        temp = temp->next;
+    }
+}
+
+
+void recommend(struct Crop* head, char crop[], char soil[]) {
+    struct Crop* temp = head;
+
+    while (temp != NULL) {
+        if (strcmp(temp->cropName, crop) == 0 &&
+            strcmp(temp->soilType, soil) == 0) {
+
+            printf("\nRecommended Irrigation Time: %.2f hours per day\n",
+                   temp->irrigationTime);
+            return;
+        }
+        temp = temp->next;
+    }
+
+    printf("No matching crop and soil type found.\n");
+}
+
+int main() {
+
+    struct Crop* head = NULL;
+    int choice;
+    char crop[50], soil[50];
+    float time;
+
+    do {
+        printf("\n--- Irrigation Recommendation System ---\n");
+        printf("1. Add Crop Data\n");
+        printf("2. Display All Crops\n");
+        printf("3. Recommend Irrigation Time\n");
+        printf("4. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+
+            case 1:
+                printf("Enter Crop Name: ");
+                scanf("%s", crop);
+
+                printf("Enter Soil Type: ");
+                scanf("%s", soil);
+
+                printf("Enter Irrigation Time (hours): ");
+                scanf("%f", &time);
+
+                head = insert(head, crop, soil, time);
+                break;
+
+            case 2:
+                display(head);
+                break;
+
+            case 3:
+                printf("Enter Crop Name: ");
+                scanf("%s", crop);
+
+                printf("Enter Soil Type: ");
+                scanf("%s", soil);
+
+                recommend(head, crop, soil);
+                break;
+
+            case 4:
+                printf("Exiting system...\n");
+                break;
+
+            default:
+                printf("Invalid choice!\n");
+        }
+
+    } while(choice != 4);
+
+    return 0;
+}
