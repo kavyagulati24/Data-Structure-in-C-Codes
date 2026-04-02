@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+typedef struct Node {
+    char name[50];
+    int number;
+    struct Node* next;
+} Node;
+
+Node* head = NULL;
+
+
+int numerology(char name[]) {
+    int sum = 0;
+
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (isalpha(name[i])) {
+            sum += toupper(name[i]) - 'A' + 1;
+        }
+    }
+
+    
+    while (sum > 9) {
+        int temp = 0;
+        while (sum > 0) {
+            temp += sum % 10;
+            sum /= 10;
+        }
+        sum = temp;
+    }
+
+    return sum;
+}
+
+
+void insert(char name[]) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    strcpy(newNode->name, name);
+    newNode->number = numerology(name);
+    newNode->next = head;
+    head = newNode;
+
+    printf("Stored: %s -> %d\n", name, newNode->number);
+}
+
+void display() {
+    Node* temp = head;
+    printf("\nStored Data:\n");
+
+    while (temp != NULL) {
+        printf("%s -> %d\n", temp->name, temp->number);
+        temp = temp->next;
+    }
+}
+
+
+void frequencyAnalysis() {
+    int freq[10] = {0};
+    Node* temp = head;
+
+    while (temp != NULL) {
+        freq[temp->number]++;
+        temp = temp->next;
+    }
+
+    printf("\nFrequency of Numerology Numbers:\n");
+    for (int i = 1; i <= 9; i++) {
+        printf("%d : %d times\n", i, freq[i]);
+    }
+}
+
+
+void patternAnalysis() {
+    int even = 0, odd = 0;
+    Node* temp = head;
+
+    while (temp != NULL) {
+        if (temp->number % 2 == 0)
+            even++;
+        else
+            odd++;
+        temp = temp->next;
+    }
+
+    printf("\nPattern Analysis:\n");
+    printf("Even Numbers: %d\n", even);
+    printf("Odd Numbers: %d\n", odd);
+}
+
+
+int main() {
+    int choice;
+    char name[50];
+
+    while (1) {
+        printf("\n1.Add Name\n2.Display\n3.Frequency\n4.Pattern\n5.Exit\n");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter Name: ");
+                scanf("%s", name);
+                insert(name);
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                frequencyAnalysis();
+                break;
+            case 4:
+                patternAnalysis();
+                break;
+            case 5:
+                exit(0);
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+}
