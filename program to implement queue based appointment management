@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Patient {
+    int id;
+    char name[50];
+    struct Patient* next;
+} Patient;
+
+Patient* rear = NULL;
+
+
+void addPatient(int id, char name[]) {
+    Patient* newNode = (Patient*)malloc(sizeof(Patient));
+    newNode->id = id;
+    strcpy(newNode->name, name);
+
+    if (rear == NULL) {
+        rear = newNode;
+        rear->next = rear;
+    } else {
+        newNode->next = rear->next;
+        rear->next = newNode;
+        rear = newNode;
+    }
+    printf("Patient added.\n");
+}
+
+void viewNext() {
+    if (rear == NULL) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    Patient* front = rear->next;
+    printf("Next Patient -> ID: %d, Name: %s\n", front->id, front->name);
+}
+
+
+void servePatient() {
+    if (rear == NULL) {
+        printf("No patients.\n");
+        return;
+    }
+
+    Patient* front = rear->next;
+
+    if (rear == front) {
+        printf("Serving: %s\n", front->name);
+        free(front);
+        rear = NULL;
+    } else {
+        rear->next = front->next;
+        printf("Serving: %s\n", front->name);
+        free(front);
+    }
+}
+
+
+void display() {
+    if (rear == NULL) {
+        printf("No patients in queue.\n");
+        return;
+    }
+
+    Patient* temp = rear->next;
+    printf("Waiting Patients:\n");
+
+    do {
+        printf("ID: %d, Name: %s\n", temp->id, temp->name);
+        temp = temp->next;
+    } while (temp != rear->next);
+}
+
+int main() {
+    int choice, id;
+    char name[50];
+
+    while (1) {
+        printf("\n1.Add\n2.View\n3.Serve\n4.Display\n5.Exit\n");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter ID & Name: ");
+                scanf("%d %s", &id, name);
+                addPatient(id, name);
+                break;
+            case 2:
+                viewNext();
+                break;
+            case 3:
+                servePatient();
+                break;
+            case 4:
+                display();
+                break;
+            case 5:
+                exit(0);
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+}
