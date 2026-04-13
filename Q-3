@@ -1,14 +1,14 @@
 #include <stdio.h>
 #define MAX 100
 
-// Function to print array
+
 void printArray(int arr[], int n) {
     for(int i = 0; i < n; i++)
         printf("%d ", arr[i]);
     printf("\n");
 }
 
-// ------------------ BUBBLE SORT ------------------
+
 void bubbleSort(int arr[], int n) {
     for(int i = 0; i < n-1; i++) {
         for(int j = 0; j < n-i-1; j++) {
@@ -21,7 +21,7 @@ void bubbleSort(int arr[], int n) {
     }
 }
 
-// ------------------ INSERTION SORT ------------------
+
 void insertionSort(int arr[], int n) {
     for(int i = 1; i < n; i++) {
         int key = arr[i];
@@ -35,7 +35,6 @@ void insertionSort(int arr[], int n) {
     }
 }
 
-// ------------------ QUICK SORT ------------------
 int partition(int arr[], int low, int high) {
     int pivot = arr[high];
     int i = low - 1;
@@ -63,7 +62,7 @@ void quickSort(int arr[], int low, int high) {
     }
 }
 
-// ------------------ MERGE SORT ------------------
+
 void merge(int arr[], int l, int m, int r) {
     int n1 = m - l + 1;
     int n2 = r - m;
@@ -100,7 +99,7 @@ void mergeSort(int arr[], int l, int r) {
     }
 }
 
-// ------------------ HEAP SORT ------------------
+
 void heapify(int arr[], int n, int i) {
     int largest = i;
     int left = 2*i + 1;
@@ -134,7 +133,7 @@ void heapSort(int arr[], int n) {
     }
 }
 
-// ------------------ MAIN FUNCTION ------------------
+
 int main() {
     int arr[MAX], n, choice;
     int temp[MAX];
