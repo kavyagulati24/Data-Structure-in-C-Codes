@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Node {
+    int day;
+    int steps;
+    int calories;
+    int sleep; // hours
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+
+void addRecord() {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    printf("Enter Day number: ");
+    scanf("%d", &newNode->day);
+
+    printf("Enter Steps: ");
+    scanf("%d", &newNode->steps);
+
+    printf("Enter Calories burned: ");
+    scanf("%d", &newNode->calories);
+
+    printf("Enter Sleep hours: ");
+    scanf("%d", &newNode->sleep);
+
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+
+    printf("Record added.\n");
+}
+
+
+void display() {
+    struct Node* temp = head;
+
+    if (temp == NULL) {
+        printf("No records available.\n");
+        return;
+    }
+
+    printf("\n--- Health Records ---\n");
+    while (temp != NULL) {
+        printf("Day %d | Steps: %d | Calories: %d | Sleep: %d hrs\n",
+               temp->day, temp->steps, temp->calories, temp->sleep);
+        temp = temp->next;
+    }
+}
+
+void analyze() {
+    struct Node* temp = head;
+
+    if (temp == NULL) {
+        printf("No data to analyze.\n");
+        return;
+    }
+
+    int totalSteps = 0, totalCalories = 0, totalSleep = 0, count = 0;
+
+    while (temp != NULL) {
+        totalSteps += temp->steps;
+        totalCalories += temp->calories;
+        totalSleep += temp->sleep;
+        count++;
+        temp = temp->next;
+    }
+
+    printf("\n--- Analysis ---\n");
+    printf("Average Steps: %d\n", totalSteps / count);
+    printf("Average Calories: %d\n", totalCalories / count);
+    printf("Average Sleep: %d hrs\n", totalSleep / count);
+}
+
+
+void visualize() {
+    struct Node* temp = head;
+
+    if (temp == NULL) {
+        printf("No data to visualize.\n");
+        return;
+    }
+
+    printf("\n--- Step Count Visualization ---\n");
+
+    while (temp != NULL) {
+        printf("Day %d: ", temp->day);
+
+        int bars = temp->steps / 1000; // scale
+        for (int i = 0; i < bars; i++) {
+            printf("*");
+        }
+
+        printf(" (%d steps)\n", temp->steps);
+        temp = temp->next;
+    }
+}
+
+int main() {
+    int choice;
+
+    do {
+        printf("\n--- Health Tracker ---\n");
+        printf("1. Add Record\n");
+        printf("2. Display Records\n");
+        printf("3. Analyze Data\n");
+        printf("4. Visualize Steps\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: addRecord(); break;
+            case 2: display(); break;
+            case 3: analyze(); break;
+            case 4: visualize(); break;
+            case 5: printf("Exiting...\n"); break;
+            default: printf("Invalid choice\n");
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
