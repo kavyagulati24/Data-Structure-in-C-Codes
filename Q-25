@@ -1,0 +1,153 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct Loan {
+    int id;
+    char name[50];
+    float income;
+    float loanAmount;
+    int tenure; // in months
+
+    float interest;
+    float monthlyEMI;
+
+    struct Loan* next;
+};
+
+struct Loan* head = NULL;
+
+int checkEligibility(float income, float loanAmount) {
+    if (income >= loanAmount * 0.2)
+        return 1;
+    else
+        return 0;
+}
+
+float calculateInterest(float amount, int tenure) {
+    float rate = 10.0; // fixed 10% annual interest
+    return (amount * rate * tenure) / (12 * 100);
+}
+
+float calculateEMI(float amount, float interest, int tenure) {
+    return (amount + interest) / tenure;
+}
+
+void addLoan() {
+    struct Loan* newNode = (struct Loan*)malloc(sizeof(struct Loan));
+
+    printf("Enter ID: ");
+    scanf("%d", &newNode->id);
+
+    printf("Enter Name: ");
+    scanf("%s", newNode->name);
+
+    printf("Enter Monthly Income: ");
+    scanf("%f", &newNode->income);
+
+    printf("Enter Loan Amount: ");
+    scanf("%f", &newNode->loanAmount);
+
+    printf("Enter Tenure (months): ");
+    scanf("%d", &newNode->tenure);
+
+    
+    if (!checkEligibility(newNode->income, newNode->loanAmount)) {
+        printf("Loan Rejected: Insufficient Income\n");
+        free(newNode);
+        return;
+    }
+
+
+    newNode->interest = calculateInterest(newNode->loanAmount, newNode->tenure);
+    newNode->monthlyEMI = calculateEMI(newNode->loanAmount, newNode->interest, newNode->tenure);
+
+    newNode->next = NULL;
+
+    if (head == NULL)
+        head = newNode;
+    else {
+        struct Loan* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+
+    printf("Loan Approved and Recorded Successfully.\n");
+}
+
+
+void displayLoans() {
+    struct Loan* temp = head;
+
+    if (temp == NULL) {
+        printf("No loan records found.\n");
+        return;
+    }
+
+    printf("\n--- Loan Records ---\n");
+
+    while (temp != NULL) {
+        printf("\nID: %d | Name: %s\n", temp->id, temp->name);
+        printf("Loan: %.2f | Interest: %.2f | EMI: %.2f\n",
+               temp->loanAmount, temp->interest, temp->monthlyEMI);
+        temp = temp->next;
+    }
+}
+
+void repaymentSchedule() {
+    struct Loan* temp = head;
+
+    if (temp == NULL) {
+        printf("No loans available.\n");
+        return;
+    }
+
+    printf("\n--- Repayment Schedule ---\n");
+
+    while (temp != NULL) {
+        printf("\nCustomer: %s\n", temp->name);
+        printf("Monthly EMI: %.2f\n", temp->monthlyEMI);
+
+        for (int i = 1; i <= temp->tenure; i++) {
+            printf("Month %d: Pay %.2f\n", i, temp->monthlyEMI);
+        }
+
+        temp = temp->next;
+    }
+}
+
+int main() {
+    int choice;
+
+    do {
+        printf("\n--- Loan Processing System ---\n");
+        printf("1. Apply Loan\n");
+        printf("2. Display Loans\n");
+        printf("3. Repayment Schedule\n");
+        printf("4. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addLoan();
+                break;
+            case 2:
+                displayLoans();
+                break;
+            case 3:
+                repaymentSchedule();
+                break;
+            case 4:
+                printf("Exiting system...\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
