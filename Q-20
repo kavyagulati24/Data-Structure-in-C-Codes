@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct Node {
+    char species[50];
+    char habitat[50];
+    int tolerance; // 1 = Low, 2 = Medium, 3 = High
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+
+void addSpecies() {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    printf("Enter species name: ");
+    scanf("%s", newNode->species);
+
+    printf("Enter habitat: ");
+    scanf("%s", newNode->habitat);
+
+    printf("Pollution tolerance (1=Low, 2=Medium, 3=High): ");
+    scanf("%d", &newNode->tolerance);
+
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+
+    printf("Species added successfully.\n");
+}
+
+
+void displayGrouped() {
+    if (head == NULL) {
+        printf("No data available.\n");
+        return;
+    }
+
+    struct Node* temp;
+
+    
+    printf("\n--- Low Pollution Tolerance ---\n");
+    temp = head;
+    while (temp != NULL) {
+        if (temp->tolerance == 1)
+            printf("Species: %s, Habitat: %s\n", temp->species, temp->habitat);
+        temp = temp->next;
+    }
+
+    
+    printf("\n--- Medium Pollution Tolerance ---\n");
+    temp = head;
+    while (temp != NULL) {
+        if (temp->tolerance == 2)
+            printf("Species: %s, Habitat: %s\n", temp->species, temp->habitat);
+        temp = temp->next;
+    }
+
+    
+    printf("\n--- High Pollution Tolerance ---\n");
+    temp = head;
+    while (temp != NULL) {
+        if (temp->tolerance == 3)
+            printf("Species: %s, Habitat: %s\n", temp->species, temp->habitat);
+        temp = temp->next;
+    }
+}
+
+
+int main() {
+    int choice;
+
+    do {
+        printf("\n--- Species Management System ---\n");
+        printf("1. Add Species\n");
+        printf("2. Display Grouped by Pollution Tolerance\n");
+        printf("3. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addSpecies();
+                break;
+            case 2:
+                displayGrouped();
+                break;
+            case 3:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+
+    } while (choice != 3);
+
+    return 0;
+}
