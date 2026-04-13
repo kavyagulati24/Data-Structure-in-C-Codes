@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Node structure
+
 struct Node {
     int data;
     struct Node* next;
@@ -9,7 +9,7 @@ struct Node {
 
 struct Node* head = NULL;
 
-// ----------- INSERTION -----------
+
 void insertAtBeginning(int value) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = value;
@@ -34,7 +34,7 @@ void insertAtEnd(int value) {
     printf("Inserted %d at the end.\n", value);
 }
 
-// ----------- DELETION -----------
+
 void deleteAtBeginning() {
     if (head == NULL) {
         printf("List is empty. Nothing to delete.\n");
@@ -68,7 +68,7 @@ void deleteAtEnd() {
     free(temp);
 }
 
-// ----------- DISPLAY -----------
+
 void displayList() {
     if (head == NULL) {
         printf("List is empty.\n");
@@ -83,7 +83,7 @@ void displayList() {
     printf("NULL\n");
 }
 
-// ----------- MAIN MENU -----------
+
 int main() {
     int choice, value;
 
