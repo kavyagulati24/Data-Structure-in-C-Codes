@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct Node {
+    char word[50];
+    char suffix[10];
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+
+char* suffixes[] = {"ah", "am", "aa", "ee", "ti", "ta", "tvam", "ka", "na"};
+int suffixCount = 9;
+
+
+int freq[10] = {0};
+
+char* findSuffix(char word[]) {
+    int len = strlen(word);
+
+    for (int i = 0; i < suffixCount; i++) {
+        int slen = strlen(suffixes[i]);
+
+        if (len >= slen) {
+            if (strcmp(word + len - slen, suffixes[i]) == 0) {
+                freq[i]++;
+                return suffixes[i];
+            }
+        }
+    }
+
+    return "None";
+}
+
+
+void addWord(char word[]) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    strcpy(newNode->word, word);
+    strcpy(newNode->suffix, findSuffix(word));
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+
+    printf("Word added with suffix: %s\n", newNode->suffix);
+}
+
+
+void display() {
+    struct Node* temp = head;
+
+    if (temp == NULL) {
+        printf("No data.\n");
+        return;
+    }
+
+    printf("\n--- Words and Suffixes ---\n");
+    while (temp != NULL) {
+        printf("Word: %s → Suffix: %s\n", temp->word, temp->suffix);
+        temp = temp->next;
+    }
+}
+
+
+void analyze() {
+    printf("\n--- Suffix Frequency ---\n");
+    for (int i = 0; i < suffixCount; i++) {
+        printf("%s : %d\n", suffixes[i], freq[i]);
+    }
+}
+
+
+int main() {
+    int choice;
+    char word[50];
+
+    do {
+        printf("\n--- Sanskrit Suffix Analyzer ---\n");
+        printf("1. Add Word\n");
+        printf("2. Display Words\n");
+        printf("3. Analyze Suffix Frequency\n");
+        printf("4. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter Sanskrit word: ");
+                scanf("%s", word);
+                addWord(word);
+                break;
+
+            case 2:
+                display();
+                break;
+
+            case 3:
+                analyze();
+                break;
+
+            case 4:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
