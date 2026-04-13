@@ -1,0 +1,157 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+
+struct Node {
+    char name[50];
+    int number;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+
+int getValue(char ch) {
+    ch = toupper(ch);
+    if (ch < 'A' || ch > 'Z') return 0;
+
+    return ((ch - 'A') % 9) + 1;
+}
+
+
+int computeNumber(char name[]) {
+    int sum = 0;
+
+    for (int i = 0; name[i] != '\0'; i++) {
+        sum += getValue(name[i]);
+    }
+
+    
+    while (sum > 9) {
+        int temp = 0;
+        while (sum > 0) {
+            temp += sum % 10;
+            sum /= 10;
+        }
+        sum = temp;
+    }
+
+    return sum;
+}
+
+
+void insert(char name[]) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    strcpy(newNode->name, name);
+    newNode->number = computeNumber(name);
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+
+    printf("Added: %s -> Numerology Number: %d\n", name, newNode->number);
+}
+
+
+void display() {
+    if (head == NULL) {
+        printf("No data available.\n");
+        return;
+    }
+
+    struct Node* temp = head;
+    printf("\n--- Stored Data ---\n");
+
+    while (temp != NULL) {
+        printf("Name: %s, Number: %d\n", temp->name, temp->number);
+        temp = temp->next;
+    }
+}
+
+
+void analyzeFrequency() {
+    int freq[10] = {0};
+
+    struct Node* temp = head;
+
+    while (temp != NULL) {
+        freq[temp->number]++;
+        temp = temp->next;
+    }
+
+    printf("\n--- Frequency Analysis ---\n");
+    for (int i = 1; i <= 9; i++) {
+        printf("Number %d: %d times\n", i, freq[i]);
+    }
+}
+
+void findPattern() {
+    int freq[10] = {0};
+    struct Node* temp = head;
+
+    while (temp != NULL) {
+        freq[temp->number]++;
+        temp = temp->next;
+    }
+
+    int max = 0, num = 0;
+
+    for (int i = 1; i <= 9; i++) {
+        if (freq[i] > max) {
+            max = freq[i];
+            num = i;
+        }
+    }
+
+    printf("\nMost frequent numerology number: %d (appears %d times)\n", num, max);
+}
+
+int main() {
+    int choice;
+    char name[50];
+
+    do {
+        printf("\n--- Numerology System ---\n");
+        printf("1. Add Name\n");
+        printf("2. Display Data\n");
+        printf("3. Frequency Analysis\n");
+        printf("4. Find Pattern\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter name: ");
+                scanf("%s", name);
+                insert(name);
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                analyzeFrequency();
+                break;
+            case 4:
+                findPattern();
+                break;
+            case 5:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice.\n");
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
