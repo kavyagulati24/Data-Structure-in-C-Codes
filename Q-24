@@ -1,0 +1,184 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct Student {
+    int id;
+    char name[50];
+    int math;
+    int science;
+    int english;
+    float avg;
+    struct Student* next;
+};
+
+struct Student* head = NULL;
+
+struct Student* createStudent(int id, char name[], int m, int s, int e) {
+    struct Student* newNode = (struct Student*)malloc(sizeof(struct Student));
+
+    newNode->id = id;
+    strcpy(newNode->name, name);
+    newNode->math = m;
+    newNode->science = s;
+    newNode->english = e;
+
+    newNode->avg = (m + s + e) / 3.0;
+    newNode->next = NULL;
+
+    return newNode;
+}
+
+
+void addStudent() {
+    int id, m, s, e;
+    char name[50];
+
+    printf("Enter ID: ");
+    scanf("%d", &id);
+
+    printf("Enter Name: ");
+    scanf("%s", name);
+
+    printf("Enter Math marks: ");
+    scanf("%d", &m);
+
+    printf("Enter Science marks: ");
+    scanf("%d", &s);
+
+    printf("Enter English marks: ");
+    scanf("%d", &e);
+
+    struct Student* newNode = createStudent(id, name, m, s, e);
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Student* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+
+    printf("Student added successfully.\n");
+}
+
+
+void displayStudents() {
+    struct Student* temp = head;
+
+    if (temp == NULL) {
+        printf("No student records.\n");
+        return;
+    }
+
+    printf("\n--- Student Records ---\n");
+
+    while (temp != NULL) {
+        printf("ID: %d | Name: %s | Math: %d | Science: %d | English: %d | Avg: %.2f\n",
+               temp->id, temp->name, temp->math, temp->science, temp->english, temp->avg);
+        temp = temp->next;
+    }
+}
+
+
+void analyzePerformance() {
+    struct Student* temp = head;
+
+    if (temp == NULL) {
+        printf("No data to analyze.\n");
+        return;
+    }
+
+    int high = 0, low = 100;
+    char topStudent[50], weakStudent[50];
+
+    float totalAvg = 0;
+    int count = 0;
+
+    while (temp != NULL) {
+        totalAvg += temp->avg;
+        count++;
+
+        if (temp->avg > high) {
+            high = temp->avg;
+            strcpy(topStudent, temp->name);
+        }
+
+        if (temp->avg < low) {
+            low = temp->avg;
+            strcpy(weakStudent, temp->name);
+        }
+
+        temp = temp->next;
+    }
+
+    printf("\n--- Performance Analysis ---\n");
+    printf("Top Student: %s (Avg: %d)\n", topStudent, high);
+    printf("Weak Student: %s (Avg: %d)\n", weakStudent, low);
+    printf("Class Average: %.2f\n", totalAvg / count);
+}
+
+
+void subjectAnalysis() {
+    struct Student* temp = head;
+
+    if (temp == NULL) {
+        printf("No data available.\n");
+        return;
+    }
+
+    int totalM = 0, totalS = 0, totalE = 0, count = 0;
+
+    while (temp != NULL) {
+        totalM += temp->math;
+        totalS += temp->science;
+        totalE += temp->english;
+        count++;
+        temp = temp->next;
+    }
+
+    printf("\n--- Subject-wise Average ---\n");
+    printf("Math: %.2f\n", totalM / (float)count);
+    printf("Science: %.2f\n", totalS / (float)count);
+    printf("English: %.2f\n", totalE / (float)count);
+}
+
+int main() {
+    int choice;
+
+    do {
+        printf("\n--- Quality Education System ---\n");
+        printf("1. Add Student\n");
+        printf("2. Display Students\n");
+        printf("3. Performance Analysis\n");
+        printf("4. Subject-wise Analysis\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addStudent();
+                break;
+            case 2:
+                displayStudents();
+                break;
+            case 3:
+                analyzePerformance();
+                break;
+            case 4:
+                subjectAnalysis();
+                break;
+            case 5:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
