@@ -1,0 +1,213 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct Verse {
+    int verseNo;
+    char text[200];
+    struct Verse* next;
+};
+
+
+struct Chapter {
+    int chapterNo;
+    struct Verse* verses;
+    struct Chapter* next;
+};
+
+
+struct Veda {
+    char name[50];
+    struct Chapter* chapters;
+    struct Veda* next;
+};
+
+struct Veda* library = NULL;
+
+void addVeda(char name[]) {
+    struct Veda* newV = (struct Veda*)malloc(sizeof(struct Veda));
+    strcpy(newV->name, name);
+    newV->chapters = NULL;
+    newV->next = NULL;
+
+    if (library == NULL) {
+        library = newV;
+    } else {
+        struct Veda* temp = library;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newV;
+    }
+
+    printf("Veda added successfully.\n");
+}
+
+
+struct Veda* findVeda(char name[]) {
+    struct Veda* temp = library;
+    while (temp != NULL) {
+        if (strcmp(temp->name, name) == 0)
+            return temp;
+        temp = temp->next;
+    }
+    return NULL;
+}
+
+
+void addChapter(char vedaName[], int chNo) {
+    struct Veda* v = findVeda(vedaName);
+
+    if (v == NULL) {
+        printf("Veda not found.\n");
+        return;
+    }
+
+    struct Chapter* newCh = (struct Chapter*)malloc(sizeof(struct Chapter));
+    newCh->chapterNo = chNo;
+    newCh->verses = NULL;
+    newCh->next = NULL;
+
+    if (v->chapters == NULL) {
+        v->chapters = newCh;
+    } else {
+        struct Chapter* temp = v->chapters;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newCh;
+    }
+
+    printf("Chapter added.\n");
+}
+
+
+struct Chapter* findChapter(struct Veda* v, int chNo) {
+    struct Chapter* temp = v->chapters;
+    while (temp != NULL) {
+        if (temp->chapterNo == chNo)
+            return temp;
+        temp = temp->next;
+    }
+    return NULL;
+}
+
+void addVerse(char vedaName[], int chNo, int vNo, char text[]) {
+    struct Veda* v = findVeda(vedaName);
+
+    if (v == NULL) {
+        printf("Veda not found.\n");
+        return;
+    }
+
+    struct Chapter* ch = findChapter(v, chNo);
+
+    if (ch == NULL) {
+        printf("Chapter not found.\n");
+        return;
+    }
+
+    struct Verse* newV = (struct Verse*)malloc(sizeof(struct Verse));
+    newV->verseNo = vNo;
+    strcpy(newV->text, text);
+    newV->next = NULL;
+
+    if (ch->verses == NULL) {
+        ch->verses = newV;
+    } else {
+        struct Verse* temp = ch->verses;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newV;
+    }
+
+    printf("Verse added.\n");
+}
+
+void display() {
+    struct Veda* v = library;
+
+    if (v == NULL) {
+        printf("No data available.\n");
+        return;
+    }
+
+    while (v != NULL) {
+        printf("\nVeda: %s\n", v->name);
+
+        struct Chapter* ch = v->chapters;
+        while (ch != NULL) {
+            printf("  Chapter %d:\n", ch->chapterNo);
+
+            struct Verse* vs = ch->verses;
+            while (vs != NULL) {
+                printf("    Verse %d: %s\n", vs->verseNo, vs->text);
+                vs = vs->next;
+            }
+
+            ch = ch->next;
+        }
+
+        v = v->next;
+    }
+}
+
+
+int main() {
+    int choice, chNo, vNo;
+    char name[50], text[200];
+
+    do {
+        printf("\n--- Digital Vedic Text System ---\n");
+        printf("1. Add Veda\n");
+        printf("2. Add Chapter\n");
+        printf("3. Add Verse\n");
+        printf("4. Display All\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter Veda name: ");
+                scanf("%s", name);
+                addVeda(name);
+                break;
+
+            case 2:
+                printf("Enter Veda name: ");
+                scanf("%s", name);
+                printf("Enter Chapter number: ");
+                scanf("%d", &chNo);
+                addChapter(name, chNo);
+                break;
+
+            case 3:
+                printf("Enter Veda name: ");
+                scanf("%s", name);
+                printf("Enter Chapter number: ");
+                scanf("%d", &chNo);
+                printf("Enter Verse number: ");
+                scanf("%d", &vNo);
+                getchar(); // clear buffer
+                printf("Enter Verse text: ");
+                fgets(text, sizeof(text), stdin);
+                text[strcspn(text, "\n")] = 0;
+                addVerse(name, chNo, vNo, text);
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice\n");
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
