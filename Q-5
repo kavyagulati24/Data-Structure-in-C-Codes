@@ -1,7 +1,7 @@
 #include <stdio.h>
 #define MAX 5
 
-// ---------------- STACK ----------------
+
 int stack[MAX], top = -1;
 
 void push() {
@@ -34,7 +34,7 @@ void displayStack() {
     }
 }
 
-// ---------------- QUEUE ----------------
+
 int queue[MAX], front = -1, rear = -1;
 
 void enqueue() {
@@ -70,7 +70,7 @@ void displayQueue() {
     }
 }
 
-// ------------- CIRCULAR QUEUE -------------
+
 int cqueue[MAX], cfront = -1, crear = -1;
 
 void cenqueue() {
@@ -120,7 +120,6 @@ void displayCQueue() {
     }
 }
 
-// ---------------- MAIN MENU ----------------
 int main() {
     int choice, subchoice;
 
