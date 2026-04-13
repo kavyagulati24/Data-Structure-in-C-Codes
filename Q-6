@@ -8,7 +8,7 @@
 int stack[MAX];
 int top = -1;
 
-// Push function
+
 void push(int value) {
     if (top == MAX - 1) {
         printf("Stack Overflow\n");
@@ -17,7 +17,7 @@ void push(int value) {
     stack[++top] = value;
 }
 
-// Pop function
+
 int pop() {
     if (top == -1) {
         printf("Stack Underflow\n");
@@ -26,19 +26,19 @@ int pop() {
     return stack[top--];
 }
 
-// Function to evaluate postfix expression
+
 int evaluatePostfix(char exp[]) {
     int i = 0;
     int op1, op2, result;
 
     while (exp[i] != '\0') {
 
-        // If operand, push to stack
+    
         if (isdigit(exp[i])) {
             push(exp[i] - '0');  // Convert char to int
         }
 
-        // If operator
+        
         else {
             op2 = pop();
             op1 = pop();
@@ -60,7 +60,6 @@ int evaluatePostfix(char exp[]) {
     return pop();
 }
 
-// Main function
 int main() {
     char exp[MAX];
 
